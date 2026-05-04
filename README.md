@@ -13,7 +13,8 @@ UniFi Voucher Site is a web-based platform for generating and managing UniFi net
 ## Features
 
 - **Voucher Management**: Create, view, and manage vouchers with customizable options for expiration, data limits, and speeds.
-- **OIDC Support**: Integrates OpenID Connect for secure user authentication and single sign-on (SSO).
+- **Authentication**: Flexible auth options including internal password, OIDC single sign-on, and LDAP directory integration with optional user whitelisting.
+- **Kiosk Mode**: Simplified guest voucher generation mode with optional admin password protection for meeting scenarios.
 - **Web and API Services**: Access the service via a web interface or integrate with other systems using a REST API.
 - **Docker Support**: Easily deploy using Docker, with customizable environment settings.
 - **Home Assistant App**: Seamlessly integrate with Home Assistant for centralized management.
@@ -116,6 +117,22 @@ services:
       # In environments with multiple organizations sharing a single UniFi Controller instance, it may be desirable to limit users to only manage vouchers associated with their own organization.
       # This restriction is based on the domain (including subdomains and TLDs) of the users email address.
       AUTH_OIDC_RESTRICT_VISIBILITY: 'false'
+      # Toggle to enable/disable LDAP authentication
+      AUTH_LDAP_ENABLED: 'false'
+      # LDAP server connection URL (Example: ldap://ldap.example.com:389 or ldaps://ldap.example.com:636)
+      AUTH_LDAP_URL: 'ldap://localhost:389'
+      # LDAP bind DN for service account (Example: CN=svc-app,OU=Service,DC=example,DC=com)
+      AUTH_LDAP_BIND_DN: ''
+      # LDAP bind password for service account
+      AUTH_LDAP_BIND_PASSWORD: ''
+      # LDAP search base for users (Example: OU=Users,DC=example,DC=com)
+      AUTH_LDAP_SEARCH_BASE: ''
+      # LDAP search filter with {{username}} placeholder (Active Directory: (sAMAccountName={{username}}), OpenLDAP: (uid={{username}}))
+      AUTH_LDAP_SEARCH_FILTER: '(sAMAccountName={{username}})'
+      # Skip TLS certificate verification (set to 'true' for self-signed certificates in dev environments)
+      AUTH_LDAP_TLS_SKIP_VERIFY: 'false'
+      # LDAP allowed users whitelist (comma or semicolon separated, empty means no LDAP auth. Example: admin,user1,user2)
+      AUTH_LDAP_ALLOWED_USERS: ''
       # Disables the login/authentication for the portal and API
       AUTH_DISABLE: 'false'
       # Voucher Types, format: expiration in minutes (required),single-use or multi-use vouchers value - '0' is for multi-use (unlimited) - '1' is for single-use - 'N' is for multi-use (Nx) (optional),upload speed limit in kbps (optional),download speed limit in kbps (optional),data transfer limit in MB (optional)
@@ -154,6 +171,8 @@ services:
       KIOSK_VOUCHER_TYPES: '480,1,,,;'
       # Enable/disable the requirement for a guest to enter their name before generating a voucher
       KIOSK_NAME_REQUIRED: 'false'
+      # Admin password to protect kiosk voucher generation (empty means no password required)
+      KIOSK_ADMIN_PASSWORD: ''
       # Sets the Kiosk timeout in seconds (Returns the user back to the starting page after inactivity)
       KIOSK_TIMEOUT: '60'
       # Enable/disable an override to redirect to the Kiosk on the / url (Also enables a link from the Kiosk back to the Admin UI)
@@ -215,6 +234,14 @@ The structure of the file should use lowercase versions of the environment varia
   "auth_oidc_client_secret": "",
   "auth_oidc_redirect_login": false,
   "auth_oidc_restrict_visibility": false,
+  "auth_ldap_enabled": false,
+  "auth_ldap_url": "ldap://localhost:389",
+  "auth_ldap_bind_dn": "",
+  "auth_ldap_bind_password": "",
+  "auth_ldap_search_base": "",
+  "auth_ldap_search_filter": "(sAMAccountName={{username}})",
+  "auth_ldap_tls_skip_verify": false,
+  "auth_ldap_allowed_users": "",
   "auth_disable": false,
   "voucher_types": "480,1,,,;",
   "voucher_custom": true,
@@ -232,6 +259,7 @@ The structure of the file should use lowercase versions of the environment varia
   "kiosk_enabled": false,
   "kiosk_voucher_types": "480,1,,,;",
   "kiosk_name_required": false,
+  "kiosk_admin_password": "",
   "kiosk_timeout": 60,
   "kiosk_homepage": false,
   "kiosk_email": false,

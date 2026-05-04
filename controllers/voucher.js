@@ -29,9 +29,6 @@ module.exports = {
             const voucher = cache.vouchers.find((e) => {
                 return e.id === req.params.id;
             });
-            const guests = cache.guests.filter((e) => {
-                return e.voucher_code === voucher.code;
-            });
 
             if(voucher) {
                 res.render('components/details', {
@@ -40,7 +37,7 @@ module.exports = {
                     bytesConvert: bytes,
                     notesConvert: notes,
                     voucher,
-                    guests,
+                    guests: cache.guests,
                     updated: cache.updated
                 });
             } else {
@@ -203,7 +200,7 @@ module.exports = {
                     res.writeHead(200, {
                         'Content-Length': Buffer.byteLength(pdfData),
                         'Content-Type': 'application/pdf',
-                        'Content-Disposition': `attachment;filename=voucher_${req.params.id}.pdf`
+                        'Content-Disposition': `inline;filename=voucher_${req.params.id}.pdf`
                     }).end(pdfData);
                 } else {
                     const printResult = await print.escpos(voucher, req.body.language, req.body.printer).catch((e) => {

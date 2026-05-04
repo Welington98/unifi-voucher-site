@@ -30,6 +30,7 @@ const api = require('./controllers/api');
 const authentication = require('./controllers/authentication');
 const bulk = require('./controllers/bulk');
 const error = require('./controllers/error');
+const guests = require('./controllers/guests');
 const kiosk = require('./controllers/kiosk');
 const status = require('./controllers/status');
 const voucher = require('./controllers/voucher');
@@ -54,7 +55,7 @@ info();
 /**
  * Initialize JWT
  */
-if(!variables.authDisabled && variables.authInternalEnabled) {
+if(!variables.authDisabled && (variables.authInternalEnabled || variables.authLdapEnabled)) {
     jwt.init();
 }
 
@@ -157,6 +158,7 @@ if(variables.serviceWeb) {
 
     app.get('/login', authentication.login.get);
     app.post('/login', authentication.login.post);
+    app.post('/login/ldap', authentication.ldapLogin.post);
     app.get('/logout', [authorization.web], authentication.logout.get);
 
     app.post('/voucher', [authorization.web], voucher.voucher.post);
@@ -167,6 +169,7 @@ if(variables.serviceWeb) {
     app.post('/voucher/:id/email', [authorization.web], voucher.email.post);
 
     app.get('/vouchers', [authorization.web], vouchers.get);
+    app.get('/guests', [authorization.web], guests.get);
     app.get('/voucher/:id', [authorization.web], voucher.voucher.get);
 
     app.get('/status', [authorization.web], status.get);

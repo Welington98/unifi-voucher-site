@@ -23,5 +23,14 @@
   "send": "Enviar Comprovante",
   "sending": "Enviando e-mail",
   "sent": "Email enviado",
-  "back": "Anterior"
+  "back": "Anterior",
+  "adminPassword": "Senha do Administrador",
+  "enterAdminPassword": "Digite a senha do administrador",
+  "invalidAdminPassword": "Senha do administrador incorreta",
+  "operatorUsername": "Usuário do Operador",
+  "enterOperatorUsername": "Digite o usuário LDAP",
+  "operatorPassword": "Senha do Operador",
+  "enterOperatorPassword": "Digite a senha LDAP",
+  "ldapCredentialsRequired": "Usuário e senha do operador são obrigatórios",
+  "invalidOperatorCredentials": "Credenciais LDAP do operador inválidas"
 }

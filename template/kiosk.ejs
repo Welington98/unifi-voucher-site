@@ -113,6 +113,28 @@
                                     </div>
                                 </div>
                             <% } %>
+                            <% if(kiosk_auth_type === 'local') { %>
+                                <div>
+                                    <label for="admin-password" class="block text-sm font-medium leading-6 text-gray-900 dark:text-white"><%= t('adminPassword') %></label>
+                                    <div class="mt-2">
+                                        <input type="password" id="admin-password" name="admin-password" autocomplete="off" required placeholder="<%= t('enterAdminPassword') %>" class="mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-white dark:bg-white/5 ring-1 ring-inset ring-gray-300 dark:ring-white/10 focus:ring-2 focus:ring-sky-600 sm:text-sm sm:leading-6">
+                                    </div>
+                                </div>
+                            <% } %>
+                            <% if(kiosk_auth_type === 'ldap') { %>
+                                <div>
+                                    <label for="username" class="block text-sm font-medium leading-6 text-gray-900 dark:text-white"><%= t('operatorUsername') %></label>
+                                    <div class="mt-2">
+                                        <input type="text" id="username" name="username" autocomplete="username" required placeholder="<%= t('enterOperatorUsername') %>" class="mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-white dark:bg-white/5 ring-1 ring-inset ring-gray-300 dark:ring-white/10 focus:ring-2 focus:ring-sky-600 sm:text-sm sm:leading-6">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="password" class="block text-sm font-medium leading-6 text-gray-900 dark:text-white"><%= t('operatorPassword') %></label>
+                                    <div class="mt-2">
+                                        <input type="password" id="password" name="password" autocomplete="current-password" required placeholder="<%= t('enterOperatorPassword') %>" class="mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-white dark:bg-white/5 ring-1 ring-inset ring-gray-300 dark:ring-white/10 focus:ring-2 focus:ring-sky-600 sm:text-sm sm:leading-6">
+                                    </div>
+                                </div>
+                            <% } %>
                             <button id="generate-button" class="w-full h-16 text-lg bg-sky-700 text-white rounded-md flex items-center justify-center font-medium hover:bg-sky-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
@@ -146,7 +168,7 @@
                             <div class="text-center text-2xl font-mono tracking-wider mb-2 text-gray-900 dark:text-white">
                                 <%= voucherCode %>
                             </div>
-                            <div class="text-center text-sm text-gray-900 dark:text-white mb-2">
+                            <div class="text-center text-sm text-gray-900 dark:text-white mb-6">
                                 <% if(unifiSsidPassword !== '') { %>
                                     <%= t('connect') %>: <strong><%= unifiSsid %></strong>,<br/>
                                     <%= t('password') %>: <strong><%= unifiSsidPassword %></strong> <%= t('or') %>,<br/>
@@ -155,8 +177,14 @@
                                 <% } %>
                                 <%= t('scan') %>:
                             </div>
-                            <div class="flex justify-center">
-                                <img src="<%= qr %>" alt="Scan to Connect QR Code"/>
+                            <div class="max-w-md mx-auto flex flex-col items-center">
+                                <div class="flex flex-col items-center">
+                                    <div class="bg-gradient-to-br from-sky-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 rounded-lg p-4 mb-3 w-full flex justify-center">
+                                        <img src="<%= qr %>" alt="WiFi QR Code" class="w-48 h-48"/>
+                                    </div>
+                                    <h3 class="text-base font-bold text-gray-900 dark:text-white mb-1">WiFi</h3>
+                                    <p class="text-xs text-gray-600 dark:text-gray-400 text-center">Escanear para conectar ao WiFi</p>
+                                </div>
                             </div>
                         </div>
 
