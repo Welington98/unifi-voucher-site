@@ -203,7 +203,7 @@ module.exports = {
                     res.writeHead(200, {
                         'Content-Length': Buffer.byteLength(pdfData),
                         'Content-Type': 'application/pdf',
-                        'Content-Disposition': `attachment;filename=voucher_${req.params.id}.pdf`
+                        'Content-Disposition': `inline;filename=voucher_${req.params.id}.pdf`
                     }).end(pdfData);
                 } else {
                     const printResult = await print.escpos(voucher, req.body.language, req.body.printer).catch((e) => {
