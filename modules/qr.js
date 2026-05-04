@@ -26,17 +26,15 @@ module.exports = (buffer = false) => {
                     log.error(`[Qr] Error while generating code!`);
                     log.error(err);
                 }
-
                 resolve(url);
             });
         } else {
-            QRCode.toBuffer(qrText, { version: 6, errorCorrectionLevel: 'Q' }, (err, buffer) => {
+            QRCode.toBuffer(qrText, { version: 6, errorCorrectionLevel: 'Q' }, (err, buf) => {
                 if(err) {
                     log.error(`[Qr] Error while generating code!`);
                     log.error(err);
                 }
-
-                resolve(buffer);
+                resolve(buf);
             });
         }
     });

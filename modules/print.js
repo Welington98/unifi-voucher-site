@@ -50,10 +50,10 @@ module.exports = {
                 bufferPages: true,
                 size: [226.77165354330398, size(vouchers[0])],
                 margins : {
-                    top: 20,
-                    bottom: 20,
-                    left: 20,
-                    right: 20
+                    top: 15,
+                    bottom: 15,
+                    left: 15,
+                    right: 15
                 }
             });
 
@@ -73,154 +73,154 @@ module.exports = {
                     doc.addPage({
                         size: [226.77165354330398, size(vouchers[item])],
                         margins : {
-                            top: 20,
-                            bottom: 20,
-                            left: 20,
-                            right: 20
+                            top: 15,
+                            bottom: 15,
+                            left: 15,
+                            right: 15
                         }
                     });
 
-                    doc.moveDown(1);
+                    doc.moveDown(0.5);
                 }
 
                 if(variables.printersLayout === 'full') {
-                    doc.image(fs.existsSync('/print/logo.png') ? '/print/logo.png' : `${process.cwd()}/public/images/print/logo.png`, 75, 15, {
-                        fit: [75, 75],
+                    doc.image(fs.existsSync('/print/logo.png') ? '/print/logo.png' : `${process.cwd()}/public/images/print/logo.png`, {
+                        fit: [60, 60],
                         align: 'center',
                         valign: 'center'
                     });
-                    doc.moveDown(6);
+                    doc.moveDown(2);
                 }
 
                 doc.font('Roboto-Bold')
-                    .fontSize(20)
+                    .fontSize(14)
                     .text(`${t('title')}`, {
                         align: 'center'
                     });
                 doc.font('Roboto-Bold')
-                    .fontSize(15)
+                    .fontSize(12)
                     .text(`${vouchers[item].code.slice(0, 5)}-${vouchers[item].code.slice(5)}`, {
                         align: 'center'
                     });
 
-                doc.moveDown(2);
+                doc.moveDown(0.6);
 
                 if (variables.unifiSsid !== '') {
                     doc.font('Roboto-Regular')
-                        .fontSize(10)
+                        .fontSize(8)
                         .text(`${t('connect')}: `, {
                             continued: true
                         });
                     doc.font('Roboto-Bold')
-                        .fontSize(10)
+                        .fontSize(8)
                         .text(variables.unifiSsid, {
                             continued: true
                         });
 
                     if (variables.unifiSsidPassword !== '') {
                         doc.font('Roboto-Regular')
-                            .fontSize(10)
+                            .fontSize(8)
                             .text(`,`);
                         doc.font('Roboto-Regular')
-                            .fontSize(10)
+                            .fontSize(8)
                             .text(`${t('password')}: `, {
                                 continued: true
                             });
                         doc.font('Roboto-Bold')
-                            .fontSize(10)
+                            .fontSize(8)
                             .text(variables.unifiSsidPassword, {
                                 continued: true
                             });
                         if(variables.printersLayout === 'full' || variables.printersLayout === 'slim_qr') {
                             doc.font('Roboto-Regular')
-                                .fontSize(10)
+                                .fontSize(8)
                                 .text(` ${t('or')},`);
                         }
                     } else {
                         if(variables.printersLayout === 'full' || variables.printersLayout === 'slim_qr') {
                             doc.font('Roboto-Regular')
-                                .fontSize(10)
+                                .fontSize(8)
                                 .text(` ${t('or')},`);
                         }
                     }
 
                     if(variables.printersLayout === 'full' || variables.printersLayout === 'slim_qr') {
                         doc.font('Roboto-Regular')
-                            .fontSize(10)
+                            .fontSize(8)
                             .text(`${t('scan')}:`);
 
-                        doc.image(await qr(), 75, variables.unifiSsidPassword !== '' ? variables.printersLayout === 'full' ? 255 : 174 : variables.printersLayout === 'full' ? 205 : 124, {
-                            fit: [75, 75],
+                        doc.image(await qr(), {
+                            fit: [60, 60],
                             align: 'center',
                             valign: 'center'
                         });
-                        doc.moveDown(6);
+                        doc.moveDown(4);
                     }
 
                     // Check if we need to move the text down extra or not depending on if large SSIDs or Passwords are used
                     if(variables.unifiSsidPassword !== '' && (variables.unifiSsidPassword.length < 16 || variables.unifiSsidPassword.length < 32)) {
-                        doc.moveDown(2);
+                        doc.moveDown(0.5);
                     }
 
-                    doc.moveDown(2);
+                    doc.moveDown(0.6);
                 }
 
                 doc.font('Roboto-Bold')
-                    .fontSize(12)
+                    .fontSize(9)
                     .text(`${t('details')}`);
 
                 doc.font('Roboto-Bold')
-                    .fontSize(10)
+                    .fontSize(8)
                     .text(`------------------------------------------`);
 
                 doc.font('Roboto-Bold')
-                    .fontSize(10)
+                    .fontSize(8)
                     .text(`${t('type')}: `, {
                         continued: true
                     });
                 doc.font('Roboto-Regular')
-                    .fontSize(10)
+                    .fontSize(8)
                     .text(!vouchers[item].authorizedGuestLimit ? t('multiUse') : vouchers[item].authorizedGuestLimit === 1 ? t('singleUse') : t('multiUse'));
 
                 doc.font('Roboto-Bold')
-                    .fontSize(10)
+                    .fontSize(8)
                     .text(`${t('duration')}: `, {
                         continued: true
                     });
                 doc.font('Roboto-Regular')
-                    .fontSize(10)
+                    .fontSize(8)
                     .text(time(vouchers[item].timeLimitMinutes, language));
 
                 if (vouchers[item].dataUsageLimitMBytes) {
                     doc.font('Roboto-Bold')
-                        .fontSize(10)
+                        .fontSize(8)
                         .text(`${t('dataLimit')}: `, {
                             continued: true
                         });
                     doc.font('Roboto-Regular')
-                        .fontSize(10)
+                        .fontSize(8)
                         .text(`${bytes(vouchers[item].dataUsageLimitMBytes, 2)}`);
                 }
 
                 if (vouchers[item].rxRateLimitKbps) {
                     doc.font('Roboto-Bold')
-                        .fontSize(10)
+                        .fontSize(8)
                         .text(`${t('downloadLimit')}: `, {
                             continued: true
                         });
                     doc.font('Roboto-Regular')
-                        .fontSize(10)
+                        .fontSize(8)
                         .text(`${bytes(vouchers[item].rxRateLimitKbps, 1, true)}`);
                 }
 
                 if (vouchers[item].txRateLimitKbps) {
                     doc.font('Roboto-Bold')
-                        .fontSize(10)
+                        .fontSize(8)
                         .text(`${t('uploadLimit')}: `, {
                             continued: true
                         });
                     doc.font('Roboto-Regular')
-                        .fontSize(10)
+                        .fontSize(8)
                         .text(`${bytes(vouchers[item].txRateLimitKbps, 1, true)}`);
                 }
             }

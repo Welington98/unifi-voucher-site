@@ -8,6 +8,7 @@ const unifi = require('../modules/unifi');
 const print = require('../modules/print');
 const mail = require('../modules/mail');
 const qr = require('../modules/qr');
+const ldap = require('../modules/ldap');
 const translation = require('../modules/translation');
 
 /**
@@ -38,6 +39,14 @@ module.exports = {
             return;
         }
 
+        // Determine kiosk auth type: ldap takes priority, then local password, then none
+        let kioskAuthType = 'none';
+        if (variables.authLdapEnabled) {
+            kioskAuthType = 'ldap';
+        } else if (variables.kioskAdminPassword !== '') {
+            kioskAuthType = 'local';
+        }
+
         res.render('kiosk', {
             t: translation('kiosk', req.locale.language),
             languages,
@@ -49,7 +58,7 @@ module.exports = {
             bytesConvert: bytes,
             voucher_types: types(variables.kioskVoucherTypes),
             kiosk_name_required: variables.kioskNameRequired,
-            kiosk_admin_password_required: variables.kioskAdminPassword !== '',
+            kiosk_auth_type: kioskAuthType,
             kiosk_homepage: variables.kioskHomepage
         });
     },
@@ -61,6 +70,8 @@ module.exports = {
      * @param res
      */
     post: async (req, res) => {
+        const t = translation('kiosk', req.locale.language);
+
         // Check if kiosk is disabled
         if(!variables.kioskEnabled) {
             res.status(501).send();
@@ -86,6 +97,14 @@ module.exports = {
                 });
 
                 if(emailResult) {
+                    // Determine auth type for re-render
+                    let kioskAuthType = 'none';
+                    if (variables.authLdapEnabled) {
+                        kioskAuthType = 'ldap';
+                    } else if (variables.kioskAdminPassword !== '') {
+                        kioskAuthType = 'local';
+                    }
+
                     res.render('kiosk', {
                         t: translation('kiosk', req.locale.language),
                         languages,
@@ -100,7 +119,8 @@ module.exports = {
                         qr: await qr(),
                         voucherId: req.body.id,
                         voucherCode: req.body.code,
-                        email: req.body.email
+                        email: req.body.email,
+                        kiosk_auth_type: kioskAuthType
                     });
                 }
             } else {
@@ -110,11 +130,30 @@ module.exports = {
                 });
             }
         } else {
-            // Check admin password if configured
-            if(variables.kioskAdminPassword !== '' && req.body['admin-password'] !== variables.kioskAdminPassword) {
-                res.cookie('flashMessage', JSON.stringify({type: 'error', message: 'Invalid admin password!'}), {httpOnly: true, expires: new Date(Date.now() + 24 * 60 * 60 * 1000)}).redirect(302, `${req.headers['x-ingress-path'] ? req.headers['x-ingress-path'] : ''}/kiosk`);
-                return;
+            // Determine auth type and validate accordingly
+            if(variables.authLdapEnabled) {
+                // LDAP authentication required
+                if(!req.body.username || !req.body.password) {
+                    res.cookie('flashMessage', JSON.stringify({type: 'error', message: t('ldapCredentialsRequired')}), {httpOnly: true, expires: new Date(Date.now() + 24 * 60 * 60 * 1000)}).redirect(302, `${req.headers['x-ingress-path'] ? req.headers['x-ingress-path'] : ''}/kiosk`);
+                    return;
+                }
+
+                const authenticated = await ldap.authenticate(req.body.username, req.body.password).catch(() => {
+                    return false;
+                });
+
+                if(!authenticated) {
+                    res.cookie('flashMessage', JSON.stringify({type: 'error', message: t('invalidOperatorCredentials')}), {httpOnly: true, expires: new Date(Date.now() + 24 * 60 * 60 * 1000)}).redirect(302, `${req.headers['x-ingress-path'] ? req.headers['x-ingress-path'] : ''}/kiosk`);
+                    return;
+                }
+            } else if(variables.kioskAdminPassword !== '') {
+                // Local admin password authentication required
+                if(req.body['admin-password'] !== variables.kioskAdminPassword) {
+                    res.cookie('flashMessage', JSON.stringify({type: 'error', message: t('invalidAdminPassword')}), {httpOnly: true, expires: new Date(Date.now() + 24 * 60 * 60 * 1000)}).redirect(302, `${req.headers['x-ingress-path'] ? req.headers['x-ingress-path'] : ''}/kiosk`);
+                    return;
+                }
             }
+            // If no auth configured, proceed directly
 
             const typeCheck = (variables.kioskVoucherTypes).split(';').includes(req.body['voucher-type']);
 
@@ -128,7 +167,8 @@ module.exports = {
                 return;
             }
 
-            const voucherNote = `${variables.kioskNameRequired ? req.body['voucher-note'] : ''}||;;||kiosk||;;||local||;;||`;
+            const voucherAuthType = variables.authLdapEnabled ? 'ldap' : 'local';
+            const voucherNote = `${variables.kioskNameRequired ? req.body['voucher-note'] : ''}||;;||kiosk||;;||${voucherAuthType}||;;||`;
 
             // Create voucher code
             const voucherCode = await unifi.create(types(req.body['voucher-type'], true), 1, voucherNote).catch((e) => {
@@ -176,7 +216,8 @@ module.exports = {
                         unifiSsidPassword: variables.unifiSsidPassword,
                         qr: await qr(),
                         voucherId: voucherData.id,
-                        voucherCode
+                        voucherCode,
+                        kiosk_auth_type: variables.authLdapEnabled ? 'ldap' : (variables.kioskAdminPassword !== '' ? 'local' : 'none')
                     });
                 }
             }

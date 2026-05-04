@@ -23,5 +23,14 @@
   "send": "Enviar Voucher",
   "sending": "A enviar e-mail",
   "sent": "E-mail enviado",
-  "back": "Voltar"
+  "back": "Voltar",
+  "adminPassword": "Senha do Administrador",
+  "enterAdminPassword": "Introduza a senha do administrador",
+  "invalidAdminPassword": "Senha do administrador incorreta",
+  "operatorUsername": "Utilizador do Operador",
+  "enterOperatorUsername": "Introduza o utilizador LDAP",
+  "operatorPassword": "Senha do Operador",
+  "enterOperatorPassword": "Introduza a senha LDAP",
+  "ldapCredentialsRequired": "O utilizador e a senha do operador são obrigatórios",
+  "invalidOperatorCredentials": "Credenciais LDAP do operador inválidas"
 }

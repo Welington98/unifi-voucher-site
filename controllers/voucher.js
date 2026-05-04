@@ -29,9 +29,6 @@ module.exports = {
             const voucher = cache.vouchers.find((e) => {
                 return e.id === req.params.id;
             });
-            const guests = cache.guests.filter((e) => {
-                return e.voucher_code === voucher.code;
-            });
 
             if(voucher) {
                 res.render('components/details', {
@@ -40,7 +37,7 @@ module.exports = {
                     bytesConvert: bytes,
                     notesConvert: notes,
                     voucher,
-                    guests,
+                    guests: cache.guests,
                     updated: cache.updated
                 });
             } else {

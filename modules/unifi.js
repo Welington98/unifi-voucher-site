@@ -113,20 +113,36 @@ module.exports = {
      */
     guests: () => {
         return new Promise((resolve, reject) => {
-            // fetch('/clients', 'GET', {
-            //     filter: 'access.type.eq(\'GUEST\')',
-            //     limit: 10000
-            // }).then((clients) => {
-            //     console.log(clients);
-            //     log.debug(`[UniFi] Found ${clients.length} guest(s)`);
-            // }).catch((e) => {
-            //     log.error('[UniFi] Error while getting guests!');
-            //     log.debug(e);
-            //     reject('[UniFi] Error while getting guests!');
-            // });
+            fetch('/clients', 'GET', {
+                filter: 'access.type.eq(\'GUEST\')',
+                limit: 10000
+            }).then((clients) => {
+                const guests = clients.map((client) => {
+                    return {
+                        id: client.id,
+                        mac: client.macAddress || client.mac || '-',
+                        hostname: client.name || client.hostname || client.macAddress || client.mac || '-',
+                        ip: client.ipAddress || client.ip || '-',
+                        connected_at: client.connectedAt || null,
+                        authorized: client.access ? client.access.authorized === true : false,
+                        tx_bytes: client.txBytes || client.tx_bytes || 0,
+                        rx_bytes: client.rxBytes || client.rx_bytes || 0
+                    };
+                }).sort((a, b) => {
+                    if(!a.connected_at || !b.connected_at) {
+                        return 0;
+                    }
 
-            // Currently disabled! Waiting on: https://community.ui.com/questions/Feature-Request-Network-API-Guest-Access-Voucher-ID/d3c470e2-433d-4386-8a13-211712311202
-            resolve([]);
+                    return new Date(b.connected_at).getTime() - new Date(a.connected_at).getTime();
+                });
+
+                log.debug(`[UniFi] Found ${guests.length} guest(s)`);
+                resolve(guests);
+            }).catch((e) => {
+                log.error('[UniFi] Error while getting guests!');
+                log.debug(e);
+                reject('[UniFi] Error while getting guests!');
+            });
         });
     }
 }

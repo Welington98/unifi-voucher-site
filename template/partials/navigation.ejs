@@ -1,13 +1,24 @@
 <nav class="sticky top-0 z-40 bg-white shadow-xs dark:bg-gray-800">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 justify-between">
-            <div class="flex">
+            <div class="flex items-center gap-6">
                 <a href="<%= baseUrl %>/vouchers" class="flex shrink-0 items-center">
                     <img class="h-12 w-auto" width="48" height="48" alt="UniFi Voucher Site Logo" src="<%= baseUrl %>/images/logo.png">
                     <div class="hidden sm:block ml-4 text-2xl font-semibold leading-7 text-gray-900 dark:text-white">
                         UniFi Voucher
                     </div>
                 </a>
+                <div class="hidden md:flex items-center gap-2">
+                    <a href="<%= baseUrl %>/vouchers" class="rounded-md px-3 py-2 text-sm font-medium <%= activePage === 'vouchers' ? 'bg-sky-700 text-white' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700' %>">
+                        Vouchers
+                    </a>
+                    <a href="<%= baseUrl %>/guests" class="rounded-md px-3 py-2 text-sm font-medium <%= activePage === 'guests' ? 'bg-sky-700 text-white' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700' %>">
+                        Guests
+                    </a>
+                    <a href="<%= baseUrl %>/status" class="rounded-md px-3 py-2 text-sm font-medium <%= activePage === 'status' ? 'bg-sky-700 text-white' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700' %>">
+                        Status
+                    </a>
+                </div>
             </div>
             <div class="flex items-center">
                 <% if(new_voucher_button) { %>
@@ -46,6 +57,12 @@
                                     Kiosk
                                 </a>
                             <% } %>
+                            <a href="<%= baseUrl %>/guests" aria-label="Connected hotspot guests" type="button" class="flex px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 items-center">
+                                <svg class="mr-3 h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M1.371 8.143c5.858-5.857 15.356-5.857 21.213 0a.75.75 0 0 1 0 1.061l-.53.53a.75.75 0 0 1-1.06 0c-4.98-4.979-13.053-4.979-18.032 0a.75.75 0 0 1-1.06 0l-.53-.53a.75.75 0 0 1 0-1.06Zm3.182 3.182c4.1-4.1 10.749-4.1 14.85 0a.75.75 0 0 1 0 1.061l-.53.53a.75.75 0 0 1-1.062 0 8.25 8.25 0 0 0-11.667 0 .75.75 0 0 1-1.06 0l-.53-.53a.75.75 0 0 1 0-1.06Zm3.204 3.182a6 6 0 0 1 8.486 0 .75.75 0 0 1 0 1.061l-.53.53a.75.75 0 0 1-1.061 0 3.75 3.75 0 0 0-5.304 0 .75.75 0 0 1-1.06 0l-.53-.53a.75.75 0 0 1 0-1.06Zm3.182 3.182a1.5 1.5 0 0 1 2.122 0 .75.75 0 0 1 0 1.061l-.53.53a.75.75 0 0 1-1.061 0l-.53-.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                                </svg>
+                                Hotspot Guests
+                            </a>
                             <a href="<%= baseUrl %>/status" aria-label="UniFi Voucher Status" type="button" class="flex px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 items-center">
                                 <svg class="mr-3 h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
                                     <path fill-rule="evenodd" d="M10.5 3.798v5.02a3 3 0 0 1-.879 2.121l-2.377 2.377a9.845 9.845 0 0 1 5.091 1.013 8.315 8.315 0 0 0 5.713.636l.285-.071-3.954-3.955a3 3 0 0 1-.879-2.121v-5.02a23.614 23.614 0 0 0-3 0Zm4.5.138a.75.75 0 0 0 .093-1.495A24.837 24.837 0 0 0 12 2.25a25.048 25.048 0 0 0-3.093.191A.75.75 0 0 0 9 3.936v4.882a1.5 1.5 0 0 1-.44 1.06l-6.293 6.294c-1.62 1.621-.903 4.475 1.471 4.88 2.686.46 5.447.698 8.262.698 2.816 0 5.576-.239 8.262-.697 2.373-.406 3.092-3.26 1.47-4.881L15.44 9.879A1.5 1.5 0 0 1 15 8.818V3.936Z" clip-rule="evenodd" />

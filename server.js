@@ -30,6 +30,7 @@ const api = require('./controllers/api');
 const authentication = require('./controllers/authentication');
 const bulk = require('./controllers/bulk');
 const error = require('./controllers/error');
+const guests = require('./controllers/guests');
 const kiosk = require('./controllers/kiosk');
 const status = require('./controllers/status');
 const voucher = require('./controllers/voucher');
@@ -168,6 +169,7 @@ if(variables.serviceWeb) {
     app.post('/voucher/:id/email', [authorization.web], voucher.email.post);
 
     app.get('/vouchers', [authorization.web], vouchers.get);
+    app.get('/guests', [authorization.web], guests.get);
     app.get('/voucher/:id', [authorization.web], voucher.voucher.get);
 
     app.get('/status', [authorization.web], status.get);

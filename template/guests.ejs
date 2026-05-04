@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-gray-100 dark:bg-gray-900">
+    <head>
+        <meta name="format-detection" content="telephone=no">
+
+        <title>Hotspot Guests | UniFi Voucher</title>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui">
+
+        <meta name="description" content="UniFi Voucher Site is a web-based platform for generating and managing UniFi network guest vouchers">
+        <meta name="author" content="Glenn de Haan">
+
+        <meta property="og:title" content="Hotspot Guests | UniFi Voucher"/>
+        <meta property="og:type" content="website"/>
+        <meta property="og:description" content="UniFi Voucher Site is a web-based platform for generating and managing UniFi network guest vouchers"/>
+
+        <link rel="manifest" href="<%= baseUrl %>/manifest.json">
+        <link rel="shortcut icon" href="<%= baseUrl %>/images/favicon.ico">
+        <link rel="apple-touch-icon" href="<%= baseUrl %>/images/icon/logo_256x256.png">
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="theme-color" content="#139CDA">
+
+        <link rel="preload" href="<%= baseUrl %>/images/logo.png" as="image">
+        <link rel="preload" href="<%= baseUrl %>/dist/style.css" as="style">
+        <link href="<%= baseUrl %>/dist/style.css" rel="stylesheet">
+    </head>
+    <body class="h-full">
+        <div>
+            <%- include('partials/navigation', {new_voucher_button: false, activePage: 'guests'}) %>
+
+            <% if(error) { %>
+                <div class="mx-6">
+                    <div class="max-w-7xl mx-auto mt-5 rounded-md bg-red-700 p-4">
+                        <div class="flex">
+                            <div class="shrink-0">
+                                <svg class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium text-white"><%= error_text %></h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+
+            <% if(info) { %>
+                <div class="mx-6">
+                    <div class="max-w-7xl mx-auto mt-5 rounded-md bg-green-700 p-4">
+                        <div class="flex">
+                            <div class="shrink-0">
+                                <svg class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium text-white"><%= info_text %></h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+
+            <main class="mx-auto max-w-7xl px-4 py-8 md:px-6 lg:px-8">
+                <header class="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Hotspot Guests</h1>
+                        <p class="text-gray-600 dark:text-gray-400">Lista global de dispositivos conectados na rede guest via hotspot.</p>
+                    </div>
+                    <div class="grid justify-items-end">
+                        <span class="mb-1 text-xs text-gray-900 dark:text-white">
+                            Last Sync: <%= new Intl.DateTimeFormat('en-GB', {day: 'numeric', month: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false}).format(new Date(updated)) %>
+                        </span>
+                        <a href="<%= baseUrl %>/guests?refresh=true" class="inline-flex items-center gap-x-1.5 rounded-md bg-sky-700 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-sky-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700">
+                            <svg class="-ml-0.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 0 1-9.201 2.466l-.312-.311h2.433a.75.75 0 0 0 0-1.5H3.989a.75.75 0 0 0-.75.75v4.242a.75.75 0 0 0 1.5 0v-2.43l.31.31a7 7 0 0 0 11.712-3.138.75.75 0 0 0-1.449-.39Zm1.23-3.723a.75.75 0 0 0 .219-.53V2.929a.75.75 0 0 0-1.5 0V5.36l-.31-.31A7 7 0 0 0 3.239 8.188a.75.75 0 1 0 1.448.389A5.5 5.5 0 0 1 13.89 6.11l.311.31h-2.432a.75.75 0 0 0 0 1.5h4.243a.75.75 0 0 0 .53-.219Z" clip-rule="evenodd" />
+                            </svg>
+                            Sync Guests
+                        </a>
+                    </div>
+                </header>
+
+                <% if(guests.length < 1) { %>
+                    <div class="relative block w-full rounded-lg border-2 border-dashed border-gray-600 dark:border-gray-400 p-10 text-center">
+                        <svg class="mx-auto h-12 w-12 text-gray-600 dark:text-gray-400" stroke="currentColor" stroke-width="1.5" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
+                        </svg>
+                        <span class="mt-2 block text-sm font-semibold text-gray-900 dark:text-white">No Hotspot Guests Connected</span>
+                    </div>
+                <% } else { %>
+                    <div class="overflow-hidden rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-white/5">
+                        <div class="relative w-full overflow-auto">
+                            <table class="w-full caption-bottom text-sm">
+                                <thead>
+                                    <tr class="border-b border-gray-300 dark:border-white/10">
+                                        <th class="h-12 px-4 text-left align-middle font-medium text-gray-600 dark:text-gray-400">Device</th>
+                                        <th class="h-12 px-4 text-left align-middle font-medium text-gray-600 dark:text-gray-400">IP</th>
+                                        <th class="h-12 px-4 text-left align-middle font-medium text-gray-600 dark:text-gray-400">Status</th>
+                                        <th class="h-12 px-4 text-left align-middle font-medium text-gray-600 dark:text-gray-400">Connected At</th>
+                                        <th class="h-12 px-4 text-left align-middle font-medium text-gray-600 dark:text-gray-400">Download</th>
+                                        <th class="h-12 px-4 text-left align-middle font-medium text-gray-600 dark:text-gray-400">Upload</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% guests.forEach((guest) => { %>
+                                        <tr class="border-b border-gray-300 dark:border-white/10 last:border-b-0">
+                                            <td class="p-4 align-middle">
+                                                <div class="font-medium text-gray-900 dark:text-white"><%= guest.hostname %></div>
+                                                <div class="text-xs text-gray-600 dark:text-gray-400"><%= guest.mac %></div>
+                                            </td>
+                                            <td class="p-4 align-middle text-gray-600 dark:text-gray-400"><%= guest.ip %></td>
+                                            <td class="p-4 align-middle">
+                                                <% if(guest.authorized) { %>
+                                                    <span class="rounded-full w-fit py-1 px-2 text-xs font-medium ring-1 ring-inset bg-green-50 text-green-700 ring-green-600/20 dark:text-green-400 dark:bg-green-400/10 dark:ring-green-400/20">Authorized</span>
+                                                <% } else { %>
+                                                    <span class="rounded-full w-fit py-1 px-2 text-xs font-medium ring-1 ring-inset bg-yellow-50 text-yellow-800 ring-yellow-600/20 dark:text-yellow-400 dark:bg-yellow-400/10 dark:ring-yellow-400/20">Pending Portal</span>
+                                                <% } %>
+                                            </td>
+                                            <td class="p-4 align-middle text-gray-600 dark:text-gray-400"><%= guest.connected_at ? new Intl.DateTimeFormat('en-GB', {dateStyle: 'short', timeStyle: 'short', hour12: false}).format(new Date(guest.connected_at)) : 'Unknown' %></td>
+                                            <td class="p-4 align-middle text-gray-600 dark:text-gray-400"><%= bytesConvert(guest.tx_bytes) %></td>
+                                            <td class="p-4 align-middle text-gray-600 dark:text-gray-400"><%= bytesConvert(guest.rx_bytes) %></td>
+                                        </tr>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                <% } %>
+            </main>
+        </div>
+    </body>
+</html>

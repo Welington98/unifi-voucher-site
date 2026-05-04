@@ -26,5 +26,11 @@
   "back": "Back",
   "adminPassword": "Admin Password",
   "enterAdminPassword": "Enter admin password",
-  "invalidAdminPassword": "Incorrect admin password"
+  "invalidAdminPassword": "Incorrect admin password",
+  "operatorUsername": "Operator Username",
+  "enterOperatorUsername": "Enter LDAP username",
+  "operatorPassword": "Operator Password",
+  "enterOperatorPassword": "Enter LDAP password",
+  "ldapCredentialsRequired": "Operator username and password are required",
+  "invalidOperatorCredentials": "Invalid LDAP operator credentials"
 }
