@@ -23,5 +23,8 @@
   "send": "Enviar Comprovante",
   "sending": "Enviando e-mail",
   "sent": "Email enviado",
-  "back": "Anterior"
+  "back": "Anterior",
+  "adminPassword": "Senha do Administrador",
+  "enterAdminPassword": "Digite a senha do administrador",
+  "invalidAdminPassword": "Senha do administrador incorreta"
 }

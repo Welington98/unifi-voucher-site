@@ -54,7 +54,7 @@ info();
 /**
  * Initialize JWT
  */
-if(!variables.authDisabled && variables.authInternalEnabled) {
+if(!variables.authDisabled && (variables.authInternalEnabled || variables.authLdapEnabled)) {
     jwt.init();
 }
 
@@ -157,6 +157,7 @@ if(variables.serviceWeb) {
 
     app.get('/login', authentication.login.get);
     app.post('/login', authentication.login.post);
+    app.post('/login/ldap', authentication.ldapLogin.post);
     app.get('/logout', [authorization.web], authentication.logout.get);
 
     app.post('/voucher', [authorization.web], voucher.voucher.post);

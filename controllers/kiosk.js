@@ -49,6 +49,7 @@ module.exports = {
             bytesConvert: bytes,
             voucher_types: types(variables.kioskVoucherTypes),
             kiosk_name_required: variables.kioskNameRequired,
+            kiosk_admin_password_required: variables.kioskAdminPassword !== '',
             kiosk_homepage: variables.kioskHomepage
         });
     },
@@ -109,6 +110,12 @@ module.exports = {
                 });
             }
         } else {
+            // Check admin password if configured
+            if(variables.kioskAdminPassword !== '' && req.body['admin-password'] !== variables.kioskAdminPassword) {
+                res.cookie('flashMessage', JSON.stringify({type: 'error', message: 'Invalid admin password!'}), {httpOnly: true, expires: new Date(Date.now() + 24 * 60 * 60 * 1000)}).redirect(302, `${req.headers['x-ingress-path'] ? req.headers['x-ingress-path'] : ''}/kiosk`);
+                return;
+            }
+
             const typeCheck = (variables.kioskVoucherTypes).split(';').includes(req.body['voucher-type']);
 
             if (!typeCheck) {

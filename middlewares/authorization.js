@@ -33,8 +33,8 @@ module.exports = {
             return;
         }
 
-        // Check if Internal auth is enabled then verify user status
-        if(variables.authInternalEnabled) {
+        // Check if Internal or LDAP auth is enabled then verify user status via JWT
+        if(variables.authInternalEnabled || variables.authLdapEnabled) {
             // Check if user has an existing authorization cookie
             if (req.cookies.authorization) {
                 // Check if token is correct and valid
